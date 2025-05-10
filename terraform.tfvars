@@ -1,2 +1,2 @@
-location            = "East US"
-resource_group_name = "my-terraform-rg"
+location            = "New Zealand North"
+resource_group_name = "AUT-2025-demo"
