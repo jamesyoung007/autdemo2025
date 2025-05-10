@@ -1,11 +1,12 @@
 provider "azurerm" {
   features {}
   subscription_id = "57480482-27fc-46a6-8643-ee45484365ec"
+  resource_provider_registrations = "none"
 }
 
 resource "azurerm_resource_group" "rg" {
   name     = "AUT-2025-demo"
-  location = "New Zealand North"
+  location = "Australia East"
 }
 
 resource "azurerm_storage_account" "storage" {
