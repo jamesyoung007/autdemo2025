@@ -33,8 +33,19 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    - name: Terraform Validate
-      run: terraform validate
+    - name: Check if Resource Group is already imported
+      id: check_rg
+      run: |
+        if terraform state list | grep -q azurerm_resource_group.rg; then
+          echo "rg_imported=true" >> $GITHUB_OUTPUT
+        else
+          echo "rg_imported=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Import resource group if not already imported
+      if: steps.check_rg.outputs.rg_imported == "false"
+      run: |
+        terraform import azurerm_resource_group.rg /subscriptions/57480482-27fc-46a6-8643-ee45484365ec/resourceGroups/AUT-2025-demo
 
     - name: Terraform Plan
       run: terraform plan -out=tfplan
