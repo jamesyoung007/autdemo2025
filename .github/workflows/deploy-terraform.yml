@@ -1,4 +1,4 @@
-name: 'Terraform Azure Deployment'
+name: Terraform Azure OIDC Deployment
 
 on:
   push:
@@ -18,21 +18,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.6.6
-
-    - name: Login to Azure
+    - name: Azure Login with OIDC
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        client-id: <YOUR_APP_ID>
+        tenant-id: <YOUR_TENANT_ID>
+        subscription-id: 57480482-27fc-46a6-8643-ee45484365ec
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
 
     - name: Terraform Init
       run: terraform init
-
-    - name: Terraform Format
-      run: terraform fmt -check
 
     - name: Terraform Validate
       run: terraform validate
