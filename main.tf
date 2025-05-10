@@ -1,43 +1,54 @@
-provider "azurerm" {
-  features {}
-  subscription_id = "57480482-27fc-46a6-8643-ee45484365ec"
-  resource_provider_registrations = "none"
-}
+name: Terraform Azure OIDC Deployment
 
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
 
-resource "azurerm_resource_group" "rg" {
-  name     = "AUT-2025-demo"
-  location = "New Zealand North"
-}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-resource "azurerm_storage_account" "storage" {
-  name                     = "autdemostorage1234"  # must be globally unique
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-resource "azurerm_service_plan" "plan" {
-  name                = "autdemo-function-plan"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  os_type             = "Linux"
-  sku_name            = "Y1"
-}
+    - name: Azure Login with OIDC
+      uses: azure/login@v1
+      with:
+        client-id: f13d535c-245d-4da4-819d-c214e657bff7
+        tenant-id: 63c1f02b-5eeb-420d-b256-df9c0e96e11e
+        subscription-id: 57480482-27fc-46a6-8643-ee45484365ec
 
-resource "azurerm_linux_function_app" "function" {
-  name                       = "autdemo-functionapp1234"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  service_plan_id            = azurerm_service_plan.plan.id
-  storage_account_name       = azurerm_storage_account.storage.name
-  storage_account_access_key = azurerm_storage_account.storage.primary_access_key
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.6
 
-  site_config {
-    application_stack {
-      node_version = "18"
-    }
-  }
-}
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Check if Resource Group is already imported
+      id: check_rg
+      run: |
+        if terraform state list | grep -q azurerm_resource_group.rg; then
+          echo "rg_imported=true" >> $GITHUB_OUTPUT
+        else
+          echo "rg_imported=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Import resource group if not already imported
+      if: steps.check_rg.outputs.rg_imported == 'false'
+      run: |
+        terraform import azurerm_resource_group.rg /subscriptions/57480482-27fc-46a6-8643-ee45484365ec/resourceGroups/AUT-2025-demo
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
