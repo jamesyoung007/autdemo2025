@@ -7,7 +7,7 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  default = "my-rg"
+  default = "AUT-2025-demo"
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -16,7 +16,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_storage_account" "storage" {
-  name                     = "mystorageacct1234" # must be globally unique
+  name                     = "autdemostorage1234" # must be globally unique
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "storage" {
 }
 
 resource "azurerm_app_service_plan" "plan" {
-  name                = "my-function-plan"
+  name                = "autdemo-function-plan"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   kind                = "FunctionApp"
@@ -35,16 +35,18 @@ resource "azurerm_app_service_plan" "plan" {
 }
 
 resource "azurerm_linux_function_app" "function" {
-  name                       = "my-function-app-1234"
+  name                       = "autdemo-functionapp1234"
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
   service_plan_id            = azurerm_app_service_plan.plan.id
   storage_account_name       = azurerm_storage_account.storage.name
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
+
   site_config {
     application_stack {
       node_version = "~18"
     }
   }
+
   os_type = "linux"
 }
