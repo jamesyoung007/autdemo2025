@@ -42,8 +42,8 @@ jobs:
           echo "rg_imported=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Import resource group if not already imported
-      if: steps.check_rg.outputs.rg_imported == 'false'
+    - name: Import Resource Group if not already imported
+      if: ${{ steps.check_rg.outputs.rg_imported == 'false' }}
       run: |
         terraform import azurerm_resource_group.rg /subscriptions/57480482-27fc-46a6-8643-ee45484365ec/resourceGroups/AUT-2025-demo
 
