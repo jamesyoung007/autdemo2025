@@ -4,6 +4,16 @@ provider "azurerm" {
   resource_provider_registrations = "none"
 }
 
+terraform {
+  backend "azurerm" {
+    resource_group_name   = "tfstaterg"
+    storage_account_name  = "autdemotfstate"
+    container_name        = "tfstate"
+    key                   = "terraform.tfstate"
+  }
+}
+
+
 resource "azurerm_resource_group" "rg" {
   name     = "AUT-2025-demo"
   location = "Australia East"
