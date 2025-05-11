@@ -30,11 +30,12 @@ jobs:
       with:
         terraform_version: 1.6.6
 
-    - name: Terraform Init (with ARM_* env for backend)
+    - name: Terraform Init (with ARM env + OIDC flag)
       env:
         ARM_CLIENT_ID: f13d535c-245d-4da4-819d-c214e657bff7
         ARM_TENANT_ID: 63c1f02b-5eeb-420d-b256-df9c0e96e11e
         ARM_SUBSCRIPTION_ID: 57480482-27fc-46a6-8643-ee45484365ec
+        ARM_USE_OIDC: true
       run: terraform init
 
     - name: Terraform Plan
