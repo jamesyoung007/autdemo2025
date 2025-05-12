@@ -29,6 +29,8 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_storage_account" "storage" {
+  // If this resource already exists, import it using:
+  // terraform import azurerm_storage_account.storage "/subscriptions/57480482-27fc-46a6-8643-ee45484365ec/resourceGroups/AUT-2025-demo/providers/Microsoft.Storage/storageAccounts/autdemostorage1234"
   name                     = "autdemostorage1234"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
@@ -37,6 +39,8 @@ resource "azurerm_storage_account" "storage" {
 }
 
 resource "azurerm_service_plan" "plan" {
+  // If this resource already exists, import it using:
+  // terraform import azurerm_service_plan.plan "/subscriptions/57480482-27fc-46a6-8643-ee45484365ec/resourceGroups/AUT-2025-demo/providers/Microsoft.Web/serverFarms/autdemo-function-plan"
   name                = "autdemo-function-plan"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
