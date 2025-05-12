@@ -73,14 +73,7 @@ resource "azurerm_monitor_diagnostic_setting" "storage_diagnostics" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
 
   enabled_log {
-    category = "StorageRead"
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  enabled_log {
-    category = "StorageWrite"
+    category = "StorageLogs"
     retention_policy {
       enabled = false
     }
@@ -102,27 +95,6 @@ resource "azurerm_monitor_diagnostic_setting" "function_diagnostics" {
 
   enabled_log {
     category = "FunctionAppLogs"
-    retention_policy {
-      enabled = false
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-    retention_policy {
-      enabled = false
-    }
-  }
-}
-
-resource "azurerm_monitor_diagnostic_setting" "app_service_plan_diagnostics" {
-  name                       = "diag-app-plan"
-  target_resource_id         = azurerm_service_plan.plan.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
-
-  enabled_log {
-    category = "AppServiceConsoleLogs"
     retention_policy {
       enabled = false
     }
