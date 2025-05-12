@@ -72,16 +72,10 @@ resource "azurerm_monitor_diagnostic_setting" "storage_diagnostics" {
   target_resource_id         = azurerm_storage_account.storage.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
 
-  enabled_log {
-    category = "StorageLogs"
-    retention_policy {
-      enabled = false
-    }
-  }
-
   metric {
     category = "Transaction"
     enabled  = true
+
     retention_policy {
       enabled = false
     }
