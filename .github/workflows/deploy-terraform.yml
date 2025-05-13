@@ -38,6 +38,10 @@ jobs:
         ARM_USE_OIDC: true
       run: terraform init
 
+    - name: Terraform Refresh
+      run: terraform refresh
+
+
     - name: Terraform Plan
       env:
         ARM_CLIENT_ID: f13d535c-245d-4da4-819d-c214e657bff7
@@ -46,8 +50,7 @@ jobs:
         ARM_USE_OIDC: true
       run: terraform plan -out=tfplan
 
-    - name: Terraform Refresh
-      run: terraform refresh
+
 
     - name: Terraform Apply
       env:
