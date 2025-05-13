@@ -3,7 +3,7 @@ terraform {
     resource_group_name   = "tfstaterg"
     storage_account_name  = "autdemotfstate"
     container_name        = "tfstate"
-    key                   = "terraform.tfstate"
+    key                   = "terraform.tfstate_1"
   }
 }
 
@@ -20,7 +20,7 @@ variable "location" {
 
 variable "resource_group_name" {
   type    = string
-  default = "AUT-2025-demo"
+  default = "AUT-2025-demo_1"
 }
 
 resource "azurerm_resource_group" "rg" {
